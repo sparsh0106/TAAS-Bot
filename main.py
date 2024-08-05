@@ -110,17 +110,11 @@ async def on_message(message):
        r = await message.channel.send(embed = embedVar)
        await r.add_reaction("♂️")
        await r.add_reaction("♀️")
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
     
-    print('APOD command invoked')
-    NASA_API_KEY = 'Mr5ooLbGFiNdG3BpJTnlHLnXkwl9n50KSW6bdrMP'
-    NASA_APOD_URL = 'https://api.nasa.gov/planetary/apod'
-
     if message.content.startswith('$apod'):
+        
+        NASA_API_KEY = 'Mr5ooLbGFiNdG3BpJTnlHLnXkwl9n50KSW6bdrMP'
+        NASA_APOD_URL = 'https://api.nasa.gov/planetary/apod'
 
         async with aiohttp.ClientSession() as session:
             async with session.get(NASA_APOD_URL, params={'api_key': NASA_API_KEY}) as response:
@@ -136,6 +130,9 @@ async def on_message(message):
 
                 else:
                     await message.channel.send('Failed to retrieve APOD. Please try again later.')
+
+    
+    
 
 keep_alive()
 
