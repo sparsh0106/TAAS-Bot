@@ -4,8 +4,12 @@ from discord.ext import commands
 import discord
 import os
 import random
+import aiohttp
 from dotenv import load_dotenv
 load_dotenv()
+import requests
+
+
 
 from keep_alive import keep_alive
 
@@ -106,6 +110,32 @@ async def on_message(message):
        r = await message.channel.send(embed = embedVar)
        await r.add_reaction("♂️")
        await r.add_reaction("♀️")
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+    
+    print('APOD command invoked')
+    NASA_API_KEY = 'Mr5ooLbGFiNdG3BpJTnlHLnXkwl9n50KSW6bdrMP'
+    NASA_APOD_URL = 'https://api.nasa.gov/planetary/apod'
+
+    if message.content.startswith('$apod'):
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(NASA_APOD_URL, params={'api_key': NASA_API_KEY}) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    title = data.get('title', 'No Title')
+                    explanation = data.get('explanation', 'No Explanation')
+                    image_url = data.get('url', '')
+
+                    embed = discord.Embed(title=title, description=explanation, color=discord.Colour.dark_blue())
+                    embed.set_image(url=image_url)
+                    await message.channel.send(embed = embed)
+
+                else:
+                    await message.channel.send('Failed to retrieve APOD. Please try again later.')
 
 keep_alive()
 
