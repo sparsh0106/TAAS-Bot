@@ -8,7 +8,7 @@ import aiohttp
 from dotenv import load_dotenv
 load_dotenv()
 import requests
-
+import asyncio
 
 
 from keep_alive import keep_alive
@@ -17,8 +17,6 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = discord.Client(intents=intents)
-
-
 
 @client.event
 async def on_ready():
@@ -112,7 +110,7 @@ async def on_message(message):
        await r.add_reaction("♀️")
     
     if message.content.startswith('$apod'):
-        
+
         NASA_API_KEY = 'Mr5ooLbGFiNdG3BpJTnlHLnXkwl9n50KSW6bdrMP'
         NASA_APOD_URL = 'https://api.nasa.gov/planetary/apod'
 
@@ -132,7 +130,43 @@ async def on_message(message):
                     await message.channel.send('Failed to retrieve APOD. Please try again later.')
 
     
-    
+    if message.content.startswith('$nasa-image'):
+       
+        NASA_API_KEY = 'Mr5ooLbGFiNdG3BpJTnlHLnXkwl9n50KSW6bdrMP'
+        NASA_IMAGES_URL = 'https://images-api.nasa.gov/search'
+
+        query = message.content[len('$nasa-image '):].strip()
+        
+        if not query:
+            await message.channel.send('Please provide a search query.')
+            return
+
+        async with aiohttp.ClientSession() as session:
+            try:
+                params = {'q': query, 'media_type': 'image'}
+                headers = {'User-Agent': 'DiscordBot (your-email@example.com)'}
+                async with session.get(NASA_IMAGES_URL, params=params, headers=headers) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        items = data.get('collection', {}).get('items', [])
+
+                        if items:
+                            # Randomly select an image result
+                            item = random.choice(items)
+                            image_url = item.get('links', [])[0].get('href', '')
+                            title = item.get('data', [])[0].get('title', 'No Title')
+                            description = item.get('data', [])[0].get('description', 'No Description')
+
+                            embed = discord.Embed(title=title, description=description, color=discord.Colour.dark_gold())
+                            embed.set_image(url=image_url)
+                            await message.channel.send(embed=embed)
+                        else:
+                            await message.channel.send('No images found for the given query.')
+                    else:
+                        await message.channel.send(f'Failed to retrieve images. Status code: {response.status}')
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                await message.channel.send('An error occurred while retrieving images. Please try again later.')
 
 keep_alive()
 
