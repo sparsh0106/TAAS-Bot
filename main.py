@@ -20,9 +20,10 @@ client = discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
-  activity = discord.Game(name='Interstellar', type=3)
+  activity = discord.Activity(type=discord.ActivityType.watching, name = 'Interstellar')
   await client.change_presence(status=discord.Status.idle, activity=activity)
   print('We have logged in as {0.user}'.format(client))
+
   channel_id = 1269234641789915137
   channel = client.get_channel(channel_id)
   if channel:
@@ -167,6 +168,7 @@ async def on_message(message):
             except Exception as e:
                 print(f"An error occurred: {e}")
                 await message.channel.send('An error occurred while retrieving images. Please try again later.')
+
 
 keep_alive()
 
