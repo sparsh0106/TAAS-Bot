@@ -10,7 +10,6 @@ load_dotenv()
 import requests
 import asyncio
 
-
 from keep_alive import keep_alive
 
 intents = discord.Intents.default()
@@ -43,8 +42,8 @@ async def on_message(message):
         embedVar = discord.Embed(title="EMBED",
                              description="This is an embed",
                              color=0x00ff00)
-        embedVar.add_field(name="Field1", value="hi", inline=False)
-        embedVar.add_field(name="Field2", value="hi2", inline=False)
+        embedVar.add_field(name="TERI MAA KI CHUT BEHN KE LODE", value="hi", inline=False)
+        embedVar.add_field(name="GAAND MARA RANDICHOD", value="hi2", inline=False)
         await message.channel.send(embed=embedVar)
 
     if message.content.startswith('$image'):
@@ -170,6 +169,7 @@ async def on_message(message):
                 await message.channel.send('An error occurred while retrieving images. Please try again later.')
 
 
+
 keep_alive()
 
 try:
@@ -187,3 +187,4 @@ except discord.HTTPException as e:
     )
   else:
     raise e
+  
