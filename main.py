@@ -35,18 +35,30 @@ async def on_message(message):
     if message.author == client.user:
         return
     
-    if message.content.startswith('$hello'):
+    if message.content.startswith('/hello'):
         await message.channel.send('Hello sir!')
 
-    if message.content.startswith('$embed'):
-        embedVar = discord.Embed(title="EMBED",
-                             description="This is an embed",
-                             color=0x00ff00)
-        embedVar.add_field(name="TERI MAA KI CHUT BEHN KE LODE", value="hi", inline=False)
-        embedVar.add_field(name="GAAND MARA RANDICHOD", value="hi2", inline=False)
-        await message.channel.send(embed=embedVar)
+    if message.content.startswith('/taas-links'):
+        # Embed setup
+        embedVar = discord.Embed(
+            title="ACCESS ALL OUR SOCIAL MEDIA LINKS DOWN BELOW!",
+            color=discord.Color.dark_orange()
+        )
+        embedVar.add_field(name="Instagram", value="https://www.instagram.com/taas.astronomers/", inline=False)
+        embedVar.add_field(name="TAAS Family WhatsApp Group", value="https://chat.whatsapp.com/FOXGNvfjZFR6LtUVENzSL0", inline=False)
+        embedVar.add_field(name="TAAS Website", value="https://sites.google.com/thapar.edu/taas", inline=False)
 
-    if message.content.startswith('$image'):
+        # File path
+        file_path = 'C:\\Users\\spars\\Downloads\\UqKrHFjGaYQ3Fi9rACt6S9.jpg'
+        if os.path.isfile(file_path):
+            with open(file_path, 'rb') as file:
+                discord_file = discord.File(file, filename='UqKrHFjGaYQ3Fi9rACt6S9.jpg')
+                embedVar.set_image(url=f'attachment://UqKrHFjGaYQ3Fi9rACt6S9.jpg')
+                await message.channel.send(embed=embedVar, file=discord_file)
+        else:
+            await message.channel.send(embed=embedVar)
+
+    if message.content.startswith('/image'):
         embed = discord.Embed(title='test', colour=discord.Colour.dark_orange())
         # Provide the full path to the image
         file_path = 'S:\\Programming Stuff\\TAAS\\bot\\IMG-20240524-WA0018.jpg'
@@ -58,7 +70,7 @@ async def on_message(message):
         else:
             await message.channel.send('Image file not found.')
 
-    if message.content.startswith('$rules'):
+    if message.content.startswith('/rules'):
         embedVar = discord.Embed(title = 'RULES!', description = 'We have a small but strict set of rules on our server. Please read them and follow them strictly.', color = discord.Color.dark_orange())
         embed = discord.Embed(title='TAAS🚀', colour=discord.Colour.dark_orange())
         file_path = 'S:\\Programming Stuff\\TAAS\\bot\\images.jpeg'
@@ -83,7 +95,7 @@ async def on_message(message):
         await r.add_reaction("👍🏻")
         await r.add_reaction("👎🏻")
 
-    if message.content.startswith('$random-image'):
+    if message.content.startswith('/random-image'):
 
         image_directory = "S:\\Programming Stuff\\TAAS\\folder"
         all_files = os.listdir(image_directory)
@@ -100,7 +112,7 @@ async def on_message(message):
               embed.set_image(url = f'attachment://{random_image_file}')
               await message.channel.send(embed = embed, file = discord_file)
 
-    if message.content.startswith('$roles'):
+    if message.content.startswith('/roles'):
        embedVar = discord.Embed(title = 'Roles', description = 'Select your roles', color = discord.Colour.dark_orange())
        embedVar.add_field(name = 'Male : @Male', value = "React with ♂️", inline=False)
        embedVar.add_field(name = 'Female : @Female', value = "React with ♀️", inline=False)
@@ -109,7 +121,7 @@ async def on_message(message):
        await r.add_reaction("♂️")
        await r.add_reaction("♀️")
     
-    if message.content.startswith('$apod'):
+    if message.content.startswith('/apod'):
 
         NASA_API_KEY = 'Mr5ooLbGFiNdG3BpJTnlHLnXkwl9n50KSW6bdrMP'
         NASA_APOD_URL = 'https://api.nasa.gov/planetary/apod'
@@ -130,13 +142,13 @@ async def on_message(message):
                     await message.channel.send('Failed to retrieve APOD. Please try again later.')
 
     
-    if message.content.startswith('$nasa-image'):
+    if message.content.startswith('/picture'):
        
         NASA_API_KEY = 'Mr5ooLbGFiNdG3BpJTnlHLnXkwl9n50KSW6bdrMP'
         NASA_IMAGES_URL = 'https://images-api.nasa.gov/search'
 
-        query = message.content[len('$nasa-image '):].strip()
-        
+        query = message.content[len('/picture '):].strip()
+            
         if not query:
             await message.channel.send('Please provide a search query.')
             return
